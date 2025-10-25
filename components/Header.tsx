@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({ setSidebarOpen, pendingApprovals
             <input type="text" placeholder="Search agents, runs..." className="w-64 rounded-lg border border-input bg-background py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-ring" />
         </div>
         
-        <div className="flex items-center rounded-lg border border-input bg-background/50 overflow-hidden transition-colors focus-within:ring-1 focus-within:ring-ring">
+        <div className="flex items-center rounded-lg border border-input bg-background/50 transition-colors focus-within:ring-1 focus-within:ring-ring">
           <ProjectSwitcher value={project.id} onChange={onProjectChange} projects={projects} />
           <div className="h-4 w-px bg-border self-center"></div>
           <button onClick={onOpenProjectSettings} className="px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground" aria-label="Project Settings">

@@ -18,7 +18,7 @@ const App: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [activeAgent, setActiveAgent] = useState<Agent | null>(null);
   const [approvals, setApprovals] = useState<Approval[]>(MOCK_APPROVALS);
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(() => localStorage.getItem('selected_project') || 'moonlight');
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(() => localStorage.getItem('selected_project') || 'ai-mgmt-team');
   const [projectSettings, setProjectSettings] = useState<Record<string, { branding?: ProjectBranding, appearance?: ProjectAppearance }>>(() => {
     const allSettings: Record<string, any> = {};
     for (const project of MOCK_PROJECTS) {

@@ -48,26 +48,33 @@ export const ProjectSwitcher: React.FC<ProjectSwitcherProps> = ({ projects, valu
 
   const debouncedSearchTerm = useDebounce(searchTerm, 100);
 
-  const { recentProjects, allProjectsFiltered } = useMemo(() => {
-    const recent = recentProjectIds
-      .map(id => projects.find(p => p.id === id))
-      .filter((p): p is Project => !!p);
-    
-    const all = projects.filter(p => 
-      (p.branding?.displayName || p.name).toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-    );
-    return { recentProjects: recent, allProjectsFiltered: all };
-  }, [debouncedSearchTerm, projects, recentProjectIds]);
-  
   const displayItems = useMemo(() => {
-    if (debouncedSearchTerm) return allProjectsFiltered;
-    const recentIds = new Set(recentProjects.map(p => p.id));
-    return [...recentProjects, ...allProjectsFiltered.filter(p => !recentIds.has(p))];
-  }, [debouncedSearchTerm, recentProjects, allProjectsFiltered]);
+    const items = projects.filter(p => 
+        (p.branding?.displayName || p.name).toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+    );
+
+    if (debouncedSearchTerm) {
+        return items;
+    }
+
+    // When not searching, sort by recent, then by name
+    items.sort((a, b) => {
+        const aIsRecent = recentProjectIds.includes(a.id);
+        const bIsRecent = recentProjectIds.includes(b.id);
+        if (aIsRecent && !bIsRecent) return -1;
+        if (!aIsRecent && bIsRecent) return 1;
+        if (aIsRecent && bIsRecent) {
+            return recentProjectIds.indexOf(a.id) - recentProjectIds.indexOf(b.id);
+        }
+        return (a.branding?.displayName || a.name).localeCompare(b.branding?.displayName || b.name);
+    });
+    
+    return items;
+}, [debouncedSearchTerm, projects, recentProjectIds]);
 
   useEffect(() => {
     if (isOpen && focusedIndex >= 0 && listRef.current) {
-        const itemElement = listRef.current.children[focusedIndex] as HTMLLIElement;
+        const itemElement = listRef.current.querySelector(`[data-index="${focusedIndex}"]`);
         itemElement?.scrollIntoView({ block: 'nearest' });
     }
   }, [focusedIndex, isOpen]);
@@ -169,47 +176,48 @@ export const ProjectSwitcher: React.FC<ProjectSwitcherProps> = ({ projects, valu
             </div>
             <div className="max-h-[360px] overflow-y-auto p-2">
                 <ul ref={listRef}>
-                    {!debouncedSearchTerm && recentProjects.length > 0 && (
-                        <>
-                            <h3 className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Recent</h3>
-                            {recentProjects.map((project, index) => {
-                                const displayName = project.branding?.displayName || project.name;
-                                const icon = project.appearance?.icon || project.icon;
-                                const color = project.appearance?.color || project.color;
-                                return (
-                                <li key={`recent-${project.id}`} role="option" aria-selected={value === project.id}>
-                                    <button onClick={() => handleSelect(project.id)} onMouseMove={() => setFocusedIndex(index)} className={`flex w-full items-center justify-between rounded-md px-2 py-2 text-left text-sm transition-colors ${value === project.id ? 'bg-primary/20 text-primary' : 'hover:bg-accent'} ${focusedIndex === index ? 'bg-accent' : ''}`}>
-                                        <div className="flex items-center space-x-2.5">
-                                            <Icon name={(icon as any) || 'folder'} className="h-4 w-4" style={{color: color}} />
-                                            <span>{displayName}</span>
-                                        </div>
-                                        {value === project.id && <Icon name="check" className="h-4 w-4" />}
+                    {displayItems.length === 0 && (
+                        <p className="p-4 text-center text-sm text-muted-foreground">No projects found.</p>
+                    )}
+                    {displayItems.map((project, index) => {
+                        const isRecent = !debouncedSearchTerm && recentProjectIds.includes(project.id);
+                        const wasRecent = index > 0 && !debouncedSearchTerm && recentProjectIds.includes(displayItems[index - 1].id);
+
+                        const showRecentHeader = isRecent && !wasRecent;
+                        const showAllHeader = !isRecent && (index === 0 || wasRecent);
+                        const showSearchResultsHeader = debouncedSearchTerm && index === 0;
+
+                        const displayName = project.branding?.displayName || project.name;
+                        const icon = project.appearance?.icon || project.icon;
+                        const color = project.appearance?.color || project.color;
+
+                        return (
+                            <React.Fragment key={project.id}>
+                                {showRecentHeader && (
+                                    <h3 className="px-2 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Recent</h3>
+                                )}
+                                {showAllHeader && (
+                                    <h3 className="px-2 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">All Projects</h3>
+                                )}
+                                {showSearchResultsHeader && (
+                                    <h3 className="px-2 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Search Results</h3>
+                                )}
+                                <li role="option" aria-selected={value === project.id} data-index={index}>
+                                    <button
+                                        onClick={() => handleSelect(project.id)}
+                                        onMouseMove={() => setFocusedIndex(index)}
+                                        className={`flex w-full items-center justify-between rounded-md px-2 py-2 text-left text-sm transition-colors ${value === project.id ? 'bg-primary/20 text-primary' : 'hover:bg-accent'} ${focusedIndex === index ? 'bg-accent' : ''}`}
+                                    >
+                                    <div className="flex items-center space-x-2.5">
+                                        <Icon name={(icon as any) || 'folder'} className="h-4 w-4" style={{color: color}} />
+                                        <span>{displayName}</span>
+                                    </div>
+                                    {value === project.id && <Icon name="check" className="h-4 w-4" />}
                                     </button>
                                 </li>
-                            )})}
-                        </>
-                    )}
-                    <h3 className="px-2 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">All Projects</h3>
-                    {allProjectsFiltered.map((project, index) => {
-                         const displayName = project.branding?.displayName || project.name;
-                         const icon = project.appearance?.icon || project.icon;
-                         const color = project.appearance?.color || project.color;
-                         const overallIndex = !debouncedSearchTerm ? recentProjects.length + index : index;
-                         return (
-                         <li key={project.id} role="option" aria-selected={value === project.id}>
-                             <button
-                                 onClick={() => handleSelect(project.id)}
-                                 onMouseMove={() => setFocusedIndex(overallIndex)}
-                                 className={`flex w-full items-center justify-between rounded-md px-2 py-2 text-left text-sm transition-colors ${value === project.id ? 'bg-primary/20 text-primary' : 'hover:bg-accent'} ${focusedIndex === overallIndex ? 'bg-accent' : ''}`}
-                             >
-                                <div className="flex items-center space-x-2.5">
-                                    <Icon name={(icon as any) || 'folder'} className="h-4 w-4" style={{color: color}} />
-                                    <span>{displayName}</span>
-                                </div>
-                                {value === project.id && <Icon name="check" className="h-4 w-4" />}
-                             </button>
-                         </li>
-                     )})}
+                            </React.Fragment>
+                        )
+                    })}
                 </ul>
             </div>
           </motion.div>

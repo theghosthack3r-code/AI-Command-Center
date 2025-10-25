@@ -3,67 +3,89 @@ import { Agent, Approval, AttentionItem, Integration, Run, Project } from './typ
 export const MOCK_USER = { name: "Alex" };
 
 export const MOCK_PROJECTS: Project[] = [
-  { id: 'moonlight', name: 'Project Moonlight', icon: 'moon', color: '#7c3aed',
-    kpis: { activeAgents: 7, pendingApprovals: 2, runsToday: 18, deliverySuccessPct: 97.2 } },
-  { id: 'aurora',    name: 'Aurora',           icon: 'sparkles', color: '#06b6d4',
-    kpis: { activeAgents: 5, pendingApprovals: 1, runsToday: 9,  deliverySuccessPct: 95.1 } },
-  { id: 'atlas',     name: 'Atlas',            icon: 'globe-2', color: '#22c55e',
-    kpis: { activeAgents: 8, pendingApprovals: 0, runsToday: 21, deliverySuccessPct: 98.4 } },
+  { 
+    id: 'ai-mgmt-team', 
+    name: 'AI Management Team', 
+    icon: 'brain-circuit', 
+    color: '#4da3ff',
+    description: "A project to build a modern, multi-agent 'AI Management Team' web app that centralizes project oversight.",
+    kpis: { activeAgents: 8, pendingApprovals: 1, runsToday: 25, deliverySuccessPct: 99.1 } 
+  },
+  { 
+    id: 'project-one',    
+    name: 'Project One',
+    icon: 'smartphone', 
+    color: '#22c55e',
+    description: "Building an affordable, off-brand 5G smartphone with a clean, customizable Android experience.",
+    kpis: { activeAgents: 6, pendingApprovals: 3, runsToday: 15,  deliverySuccessPct: 96.5 } 
+  },
+  { 
+    id: 'anurex-business',     
+    name: 'Anurex Business',
+    icon: 'heart-pulse', 
+    color: '#06b6d4',
+    description: "Rebuild and scale Anurex into a modern, trusted consumer health brand with a multi-channel ecommerce stack.",
+    kpis: { activeAgents: 7, pendingApprovals: 2, runsToday: 20, deliverySuccessPct: 98.0 } 
+  },
 ];
 
 export const MOCK_ATTENTION: AttentionItem[] = [
-  { id:"appr-8721", type:"approval", priority:"P1", title:"Refund request #8721", hint:"$124.17 • Reason: damaged item", cta: "Review" },
-  { id:"run-failed-oo-1203", type:"run", priority:"P1", title:"Run failed: OrderOps", hint:"12:03 PM • exit code 1", cta: "Open run" },
-  { id:"spend-bird", type:"spend", priority:"P2", title:"SMS usage 82% of cap", hint:"Bird cycle resets in 3 days", cta: "View usage" },
-  { id:"support-new", type:"inbound", priority:"P2", title:"3 new support messages", hint:"oldest: 27m ago", cta: "View messages" }
+  { id:"appr-anurex-box", type:"approval", priority:"P1", title:"[Anurex] Finalize retail box PDF", hint:"Print-ready PDFs + proof approval needed", cta: "Review" },
+  { id:"run-failed-p1-build", type:"run", priority:"P1", title:"[Project One] AOSP build failed", hint:"WSL2 Ubuntu, JDK, repo, ccache; clone and sync source", cta: "Open run" },
+  { id:"spend-aimt", type:"spend", priority:"P2", title:"[AI Mgmt] API spend at 85% of budget", hint:"Cycle resets in 4 days", cta: "View usage" },
+  { id:"inbound-anurex-b2b", type:"inbound", priority:"P2", title:"[Anurex] New wholesale inquiry", hint:"From 'BigBox Retail'", cta: "View message" }
 ];
 
 export const MOCK_AGENTS: Agent[] = [
-    // --- Project Moonlight ---
-    { id: 'agent-exec-1', name: 'Executive Assistant', department: 'Executive', role: 'Orchestrator', status: 'Online', description: 'Primary coordinator agent, manages high-level tasks and delegates to other departments.', lastRun: '2m ago', projectId: 'moonlight' },
-    { id: 'agent-ops-1', name: 'Operations Manager', department: 'Operations', role: 'Monitors operational health', status: 'Online', description: 'Oversees all operational agents and reports anomalies.', lastRun: '5m ago', projectId: 'moonlight' },
-    { id: 'agent-ops-2', name: 'OrderOps', department: 'Operations', role: 'Processes incoming orders', status: 'Warn', description: 'Handles order fulfillment from all channels. Warning: High queue length.', lastRun: '1m ago', projectId: 'moonlight' },
-    { id: 'agent-support-1', name: 'Support Agent', department: 'Support', role: 'Handles customer queries', status: 'Online', description: 'Provides first-level automated support via chat and email.', lastRun: '15s ago', projectId: 'moonlight' },
-    { id: 'agent-comms-1', name: 'Notification Router', department: 'Communications', role: 'Routes all system alerts', status: 'Online', description: 'Manages and routes notifications through integrations like Bird and Telegram.', lastRun: '5s ago', projectId: 'moonlight' },
-    { id: 'agent-mktg-1', name: 'Social Agent', department: 'Marketing', role: 'Manages social media presence', status: 'Offline', description: 'Scheduled social media posting agent. Currently offline for maintenance.', lastRun: '2d ago', projectId: 'moonlight' },
-    { id: 'agent-fin-1', name: 'Finance Agent', department: 'Finance', role: 'Monitors transactions and budgets', status: 'Online', description: 'Tracks expenses, handles invoicing, and alerts on budget deviations.', lastRun: '1h ago', projectId: 'moonlight' },
+    // --- AI Management Team ---
+    { id: 'agent-aimt-1', name: 'Chief of Staff', department: 'Executive', role: 'Greets, summarizes, routes', status: 'Online', description: 'Primary coordinator agent, summarizes status and routes tasks to specialized agents.', lastRun: '1m ago', projectId: 'ai-mgmt-team' },
+    { id: 'agent-aimt-2', name: 'Project Ops', department: 'Operations', role: 'Schedules, dependencies, risk watch', status: 'Online', description: 'Monitors project schedules, dependencies, and risks, providing summaries.', lastRun: '5m ago', projectId: 'ai-mgmt-team' },
+    { id: 'agent-aimt-3', name: 'Research & Insights', department: 'Analytics', role: 'Web/doc research, distillation', status: 'Online', description: 'Conducts research from web and documents, providing distilled briefs and citations.', lastRun: '30m ago', projectId: 'ai-mgmt-team' },
+    { id: 'agent-aimt-4', name: 'Engineering Agent', department: 'Engineering', role: 'Spec drafting, code scaffolding', status: 'Online', description: 'Assists with engineering tasks like spec drafting, code scaffolding, and PR notes.', lastRun: '3m ago', projectId: 'ai-mgmt-team' },
+    { id: 'agent-aimt-5', name: 'Design & UX Agent', department: 'Engineering', role: 'Layouts, components, accessibility', status: 'Warn', description: 'Proposes UI components, layouts, and performs accessibility checks. Warning: component library sync pending.', lastRun: '1h ago', projectId: 'ai-mgmt-team' },
+    { id: 'agent-aimt-6', name: 'Data & Integrations', department: 'Engineering', role: 'Connectors, transforms, ETL', status: 'Online', description: 'Manages data connectors, transforms, and ETL schemas.', lastRun: '15m ago', projectId: 'ai-mgmt-team' },
+    { id: 'agent-aimt-7', name: 'Notifications & Comms', department: 'Communications', role: 'Templates, digests, alerts', status: 'Online', description: 'Handles communication templates, daily/weekly digests, and incident alerts.', lastRun: '2m ago', projectId: 'ai-mgmt-team' },
+    { id: 'agent-aimt-8', name: 'Biz/CRM Agent', department: 'Marketing', role: 'Lead tracking, pipeline summaries', status: 'Offline', description: 'Handles lead tracking and pipeline summaries (Phase 2). Currently offline.', lastRun: '3d ago', projectId: 'ai-mgmt-team' },
     
-    // --- Project Aurora ---
-    { id: 'agent-aurora-exec-1', name: 'Aurora Coordinator', department: 'Executive', role: 'Project Lead', status: 'Online', description: 'Coordinates all agents and tasks for the Aurora project.', lastRun: '10m ago', projectId: 'aurora' },
-    { id: 'agent-aurora-eng-1', name: 'Data Pipeline Engineer', department: 'Engineering', role: 'Manages data ingestion', status: 'Online', description: 'Ensures smooth data flow from various sources for Project Aurora.', lastRun: '20m ago', projectId: 'aurora' },
-    { id: 'agent-aurora-analytics-1', name: 'Insight Generator', department: 'Analytics', role: 'Finds data patterns', status: 'Warn', description: 'Analyzes data streams to produce actionable insights.', lastRun: '1m ago', projectId: 'aurora' },
-    { id: 'agent-aurora-support-1', name: 'Feedback Collector', department: 'Support', role: 'Gathers user feedback', status: 'Online', description: 'Collects and categorizes user feedback for Aurora.', lastRun: '12m ago', projectId: 'aurora' },
-    { id: 'agent-aurora-ops-1', name: 'Resource Allocator', department: 'Operations', role: 'Manages cloud resources', status: 'Online', description: 'Optimizes resource allocation for Aurora agents.', lastRun: '1h ago', projectId: 'aurora' },
+    // --- Project One ---
+    { id: 'agent-p1-1', name: 'Hardware Sourcer', department: 'Operations', role: 'Supplier discovery, spec comparison', status: 'Online', description: 'Builds supplier longlists, compares specs, and drafts RFQs.', lastRun: '10m ago', projectId: 'project-one' },
+    // FIX: Changed agent status from 'Failed' to 'Warn' to align with the 'AgentStatus' type definition. 'Failed' is a 'RunStatus', not an 'AgentStatus'.
+    { id: 'agent-p1-2', name: 'OS Build Engineer', department: 'Engineering', role: 'AOSP build scripts, patching', status: 'Warn', description: 'Manages AOSP build environment, drafts patch series, and handles CI configuration.', lastRun: '5m ago', projectId: 'project-one' },
+    { id: 'agent-p1-3', name: 'Branding Assistant', department: 'Marketing', role: 'Logo/wordmark ideation, copy', status: 'Online', description: 'Generates branding ideas, messaging drafts, and landing page copy.', lastRun: '2h ago', projectId: 'project-one' },
+    { id: 'agent-p1-4', name: 'Compliance Specialist', department: 'Support', role: 'Requirement matrices, test plans', status: 'Online', description: 'Creates compliance matrices (CE, FCC, etc.) and documentation checklists.', lastRun: '8h ago', projectId: 'project-one' },
+    { id: 'agent-p1-5', name: 'Logistics Planner', department: 'Operations', role: 'Shipping, packaging specs', status: 'Warn', description: 'Drafts shipping plans, packaging specs, and warranty policies. Warning: incoterms need clarification.', lastRun: '45m ago', projectId: 'project-one' },
+    { id: 'agent-p1-6', name: 'QA Test Runner', department: 'Engineering', role: 'Runs CTS/VTS, vendor blob integration', status: 'Offline', description: 'Automates security hardening and runs compatibility test suites.', lastRun: '1d ago', projectId: 'project-one' },
 
-    // --- Project Atlas ---
-    { id: 'agent-atlas-exec-1', name: 'Atlas Strategist', department: 'Executive', role: 'Long-term Planner', status: 'Online', description: 'Sets the strategic direction for the Atlas initiative.', lastRun: '3h ago', projectId: 'atlas' },
-    { id: 'agent-atlas-eng-1', name: 'Integrations Engineer', department: 'Engineering', role: 'Maintains API integrations', status: 'Online', description: 'Monitors health of third-party API connections for Atlas.', lastRun: '10m ago', projectId: 'atlas' },
-    { id: 'agent-atlas-eng-2', name: 'QA/SRE Agent', department: 'Engineering', role: 'Performs automated testing', status: 'Warn', description: 'Runs continuous integration and system reliability tests. Warning: High latency detected.', lastRun: '25m ago', projectId: 'atlas' },
-    { id: 'agent-atlas-analytics-1', name: 'Forecasting Agent', department: 'Analytics', role: 'Predicts market trends', status: 'Online', description: 'Uses historical data to forecast for Project Atlas.', lastRun: '2h ago', projectId: 'atlas' },
-    { id: 'agent-atlas-mktg-1', name: 'Outreach/Sales Agent', department: 'Marketing', role: 'Manages outbound campaigns', status: 'Unknown', description: 'Handles lead generation and email outreach campaigns for Atlas.', lastRun: '8h ago', projectId: 'atlas' },
-    { id: 'agent-atlas-fin-1', name: 'Cost Analyst', department: 'Finance', role: 'Analyzes project spend', status: 'Online', description: 'Monitors the budget and spending for Atlas.', lastRun: '45m ago', projectId: 'atlas' },
-    { id: 'agent-atlas-ops-1', name: 'Logistics Coordinator', department: 'Operations', role: 'Manages supply chain', status: 'Online', description: 'Coordinates logistics for the Atlas project.', lastRun: '15m ago', projectId: 'atlas' },
-    { id: 'agent-atlas-support-1', name: 'Escalation Handler', department: 'Support', role: 'Handles Tier 2 support', status: 'Offline', description: 'Manages escalated support tickets for Atlas.', lastRun: '1d ago', projectId: 'atlas' },
+    // --- Anurex Business ---
+    { id: 'agent-anrx-1', name: 'Program Coordinator', department: 'Executive', role: 'Program lead, creative direction', status: 'Online', description: 'Coordinates creative direction, vendor tasks, and overall program leadership.', lastRun: '15m ago', projectId: 'anurex-business' },
+    { id: 'agent-anrx-2', name: 'Ecommerce Integrator', department: 'Engineering', role: 'Amazon, Shopify, eBay sync', status: 'Online', description: 'Manages integrations with e-commerce platforms and optimizes ASINs.', lastRun: '25m ago', projectId: 'anurex-business' },
+    { id: 'agent-anrx-3', name: 'Inventory Manager', department: 'Operations', role: 'Lot tracking, packaging BOMs', status: 'Online', description: 'Handles inventory tracking, packaging Bill of Materials, and vendor rosters.', lastRun: '1h ago', projectId: 'anurex-business' },
+    { id: 'agent-anrx-4', name: 'Marketing Automation', department: 'Marketing', role: 'Email automations, explainer videos', status: 'Online', description: 'Manages blog/FAQ cadence, email automations, and testimonial cuts.', lastRun: '3h ago', projectId: 'anurex-business' },
+    { id: 'agent-anrx-5', name: 'Compliance Analyst', department: 'Support', role: 'Claims, instructions, GMP', status: 'Warn', description: 'Maintains the risk register and compliance checklist (claims, instructions, GMP adjacency). Warning: IFU needs review.', lastRun: '4h ago', projectId: 'anurex-business' },
+    { id: 'agent-anrx-6', name: 'Creative Ops', department: 'Marketing', role: 'Packaging dielines, Amazon A+ assets', status: 'Unknown', description: 'Generates creative assets like packaging dielines, Amazon A+ content, and videos.', lastRun: '9h ago', projectId: 'anurex-business' },
+    { id: 'agent-anrx-7', name: 'Order Hub Overseer', department: 'Operations', role: 'Order ingest, SLA monitoring', status: 'Online', description: 'Manages the order hub dashboard, monitors SLAs, and oversees the returns/RMA workflow.', lastRun: '5m ago', projectId: 'anurex-business' },
 ];
 
 export const MOCK_RUNS: Run[] = [
-  { id:"r-001", type:"Power-up", name:"Ship Now", status:"Succeeded", started:"10:15 AM", duration:"14s", projectId: 'moonlight' },
-  { id:"r-002", type:"Agent",   name:"Executive Assistant", status:"Succeeded", started:"10:21 AM", duration:"4s", projectId: 'moonlight' },
-  { id:"r-003", type:"Agent",   name:"OrderOps", status:"Failed", started:"12:03 PM", duration:"6s", projectId: 'moonlight' },
-  { id:"r-004", type:"Agent",   name:"Support Agent", status:"Running", started:"12:15 PM", duration:"-", projectId: 'moonlight' },
-  { id:"r-005", type:"Agent",   name:"Finance Agent", status:"Succeeded", started:"12:18 PM", duration:"22s", projectId: 'moonlight' },
-  { id:"r-006", type:"Power-up", name:"Daily Brief", status:"Succeeded", started:"09:00 AM", duration:"8s", projectId: 'aurora' },
-  { id:"r-007", type:"Agent", name:"QA/SRE Agent", status:"Failed", started:"11:50 AM", duration:"31s", projectId: 'atlas' },
-  { id:"r-008", type:"Agent", name:"Insight Generator", status:"Succeeded", started:"12:20 PM", duration:"45s", projectId: 'aurora' },
+  { id:"r-001", type:"Agent", name:"Chief of Staff", status:"Succeeded", started:"10:15 AM", duration:"3s", projectId: 'ai-mgmt-team' },
+  { id:"r-002", type:"Agent", name:"OS Build Engineer", status:"Failed", started:"10:21 AM", duration:"45s", projectId: 'project-one' },
+  { id:"r-003", type:"Agent", name:"Order Hub Overseer", status:"Succeeded", started:"12:03 PM", duration:"6s", projectId: 'anurex-business' },
+  { id:"r-004", type:"Agent", name:"Hardware Sourcer", status:"Running", started:"12:15 PM", duration:"-", projectId: 'project-one' },
+  { id:"r-005", type:"Agent", name:"Marketing Automation", status:"Succeeded", started:"12:18 PM", duration:"22s", projectId: 'anurex-business' },
+  { id:"r-006", type:"Power-up", name:"Daily Brief", status:"Succeeded", started:"09:00 AM", duration:"8s", projectId: 'ai-mgmt-team' },
+  { id:"r-007", type:"Agent", name:"Compliance Analyst", status:"Succeeded", started:"11:50 AM", duration:"31s", projectId: 'anurex-business' },
+  { id:"r-008", type:"Agent", name:"Research & Insights", status:"Succeeded", started:"12:20 PM", duration:"1m 12s", projectId: 'ai-mgmt-team' },
 ];
 
 export const MOCK_APPROVALS: Approval[] = [
-  { id:"A-445", subject:"Refund #8721", action:"Approve refund", requested:"09:48 AM", status:"Pending", projectId: 'moonlight' },
-  { id:"A-446", subject:"Bulk SMS to 10k users", action:"Send campaign", requested:"10:02 AM", status:"Pending", projectId: 'moonlight' },
-  { id:"A-447", subject:"Deploy Integrations Engineer v2.3", action:"Deploy Agent", requested:"11:30 AM", status:"Approved", projectId: 'atlas' },
-  { id:"A-448", subject:"Pause Social Agent for maintenance", action:"Pause Agent", requested:"Yesterday", status:"Approved", projectId: 'moonlight' },
-  { id:"A-449", subject:"Increase budget for Operations", action:"Budget Change", requested:"Yesterday", status:"Denied", projectId: 'moonlight' },
-  { id:"A-450", subject:"New data source for Aurora", action:"Approve Integration", requested:"10:15 AM", status:"Pending", projectId: 'aurora' },
+  { id:"A-445", subject:"Finalize retail box PDF", action:"Approve print-ready assets", requested:"09:48 AM", status:"Pending", projectId: 'anurex-business' },
+  { id:"A-446", subject:"Select final hardware vendor", action:"Negotiate payment terms, SLA", requested:"10:02 AM", status:"Pending", projectId: 'project-one' },
+  { id:"A-447", subject:"Enable Biz/CRM Agent", action:"Deploy Agent (Phase 2)", requested:"11:30 AM", status:"Denied", projectId: 'ai-mgmt-team' },
+  { id:"A-448", subject:"Confirm domain purchase: unityneo.com", action:"Purchase domain", requested:"Yesterday", status:"Approved", projectId: 'project-one' },
+  { id:"A-449", subject:"Launch refreshed Amazon pages", action:"Push creative pack to Amazon US/CA", requested:"Yesterday", status:"Approved", projectId: 'anurex-business' },
+  { id:"A-450", subject:"Final confirmation on company/product names", action:"Confirm trademark search", requested:"2d ago", status:"Pending", projectId: 'project-one' },
+  { id:"A-451", subject:"Approve new UI component: Dashboard Card", action:"Merge PR #123", requested:"3h ago", status:"Pending", projectId: 'ai-mgmt-team' },
+  { id:"A-452", subject:"Approve new SMS provider (Bird)", action:"Integration budget approval", requested:"1d ago", status:"Approved", projectId: 'anurex-business' },
 ];
 
 export const MOCK_INTEGRATIONS: Integration[] = [
